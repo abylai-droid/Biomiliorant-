@@ -9,7 +9,7 @@ from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from manual_sources import LISTINGS, OFFICIAL, BLOCKED
+from manual_sources import LISTINGS, OFFICIAL, BLOCKED, VESSEL_OFFERS, REAL_CHANNELS, VESSEL_CHECKLIST
 
 DATA, OUT = sys.argv[1], sys.argv[2]
 CHECK_DATE = "2026-11-09"
@@ -277,6 +277,19 @@ for col, w in zip('ABCD', (32, 60, 60, 50)): ws.column_dimensions[col].width = w
 for row in ws.iter_rows():
     for c in row: c.alignment = Alignment(wrap_text=True, vertical='top')
 for c in ws[1]: c.fill = HDR; c.font = HF
+
+# 7b. Груз на воде
+VH = ['№', 'Продавец', 'Заявление (как в объявлении)', 'Судно', 'IMO / MMSI', 'Цена', 'Дата', 'Ссылка на объявление', 'Результат проверки судна', 'Источник проверки', 'Вердикт']
+ws = sheet('Груз на воде', VH, [[i+1, *v] for i, v in enumerate(VESSEL_OFFERS)],
+           {'Продавец': 28, 'Заявление (как в объявлении)': 50, 'Результат проверки судна': 60, 'Источник проверки': 40, 'Ссылка на объявление': 40, 'Вердикт': 26})
+for row in ws.iter_rows(min_row=2):
+    v = row[10].value or ''
+    row[10].fill = PatternFill('solid', fgColor='F8CBAD' if ('ФАЛЬШ' in v or 'ПРИЗНАК' in v) else 'FFEB9C')
+ws.append([]); ws.append(['', 'РЕАЛЬНЫЕ КАНАЛЫ ВЫХОДА НА ГРУЗЫ В ПУТИ'])
+ws.append(['', 'Тип', 'Компания', 'Сайт', 'Зачем'])
+for c in REAL_CHANNELS: ws.append(['', *c])
+ws.append([]); ws.append(['', 'ЧЕК-ЛИСТ ПРОВЕРКИ «ЗАГРУЖЕННОГО ТАНКЕРА»'])
+for c in VESSEL_CHECKLIST: ws.append(['', c])
 
 # 8. ТОП-20
 top = sorted([o for o in off_rows if 'Казахстан' not in o[3] and 'Dangote' not in o[2] and 'Bukhara' not in o[2]], key=lambda o: o[9] != 'Высокий')[:20 - min(5, len(req_b2b))]

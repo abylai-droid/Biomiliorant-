@@ -185,3 +185,57 @@ BLOCKED = [
     ("LinkedIn / Facebook / Telegram / WhatsApp", "нужна авторизация; использованы только индексируемые сниппеты"),
     ("Yandex / Bing", "отдельного API нет; использован встроенный веб-поиск"),
 ]
+
+# ---------------------------------------------------------------------------
+# 3. Объявления «груз на воде / танкер загружен» и результаты проверки судов
+# ---------------------------------------------------------------------------
+VESSEL_OFFERS = [
+    # seller, claim, vessel, imo/mmsi, price, date, url, check_result, check_src, verdict
+    ("Не раскрыт (espaceagro.com, объявление удалено)", "100 000 MT EN590 10ppm на судне в открытом море, курс на Сингапур, возможен реротинг; оплата: блокировка средств, MT799 после POP и IMO",
+     "ALDANA", "IMO 9809368 / MMSI 372616000", "", "дата не установлена (страница удалена)", "https://www.espaceagro.com/english/petroleum-gas/en590-10ppm-loaded-vessel-en-r_i697508.html",
+     "Судно существует, но это Suezmax-танкер для СЫРОЙ нефти (Панама, 2018 г.п., 156 670 dwt). Чистые нефтепродукты (дизель) на таких судах не перевозят. По AIS — у французской ИЭЗ, на якоре, осадка 9,5 м (для Suezmax — близко к балласту), а не «в пути в Сингапур».",
+     "https://maritimeoptima.com/public/vessels/pages/imo:9809368/mmsi:372616000/ALDANA.html ; https://www.vesselfinder.com/vessels/details/9809368",
+     "ФАЛЬШИВКА: использовано название реального судна"),
+    ("Не раскрыт (espaceagro.com, объявление удалено)", "81 545 MT EN590 (10ppm) в пути в Сингапур, ETA 24 марта 20:00",
+     "NORDIC MOON", "IMO 9742900 / MMSI 538011585", "", "год не указан", "https://www.espaceagro.com/petrole-gaz/navire-flottant-diesel-590-10p_i661441.html",
+     "Судно существует: Suezmax-танкер для СЫРОЙ нефти (Маршалловы о-ва, 2016 г.п.), менеджер — Nordic American Tankers, компания перевозит только сырую нефть. Перевозить дизель EN590 не может.",
+     "https://www.vesselfinder.com/vessels/details/9742900 ; https://magicport.ai/vessels/tanker/nordic-moon-mmsi-538011585",
+     "ФАЛЬШИВКА: использовано название реального судна"),
+    ("93 Enterprise (go4WorldBusiness, Сингапур)", "Vessel loaded with EN 590 10 ppm 100,000 MT diesel en route Singapore ETA end March 2026. STS Operation in Singapore... please act fast before prices go up",
+     "не указано", "", "$450/MT", "2026-03-13", "https://www.go4worldbusiness.com/pref_product/view/1913411/en590-10ppm.html",
+     "Название судна и IMO не приводятся — проверить невозможно. Цена ≈33% от рынка. Тот же продавец публиковал «Kazakhstan origin 100k MT en route Singapore» по $1/MT (май 2025) и VTT по $460 с комиссией.",
+     "https://www.go4worldbusiness.com/pref_product/view/1852287/en590-10ppm-ulsd-kazakhstan-origin.html", "ПРИЗНАКИ МОШЕННИЧЕСТВА"),
+    ("Lee Kuang Hong (go4WorldBusiness, Сингапур)", "EN590 10PPM ULSD; покупатель даёт Charter Party, продавец шлёт Q88, B/L, ETA, Statement of Availability; в течение 48 ч — реротинг судна",
+     "не указано", "", "$480/MT", "2026-09-30", "https://www.go4worldbusiness.com/pref_product/view/1950422/en590-10ppm-ulsd.html",
+     "Судно не названо; цена ≈36% от рынка; продавец — частное лицо; типовая процедура «re-route vessel».", "", "ПРИЗНАКИ МОШЕННИЧЕСТВА"),
+    ("Не раскрыт (espaceagro.com, объявления удалены)", "100 000 MT available now at Lomé port – $640/mt, на рейде; другое — 25 000 MT в Ломе по $480/MT, direct TTO",
+     "не указано", "", "$480–640/MT", "", "https://www.espaceagro.com/petrole-gaz/fast-deal--en590-10ppm-availab_i687035.html",
+     "Судно не названо; цена 36–48% от рынка; в одном объявлении — «3% security guarantee / title take over fee» до сделки (advance-fee).", "", "ПРИЗНАКИ МОШЕННИЧЕСТВА"),
+    ("Spartan Lubricants (industrialmarinepower.com)", "loaded vessel with fuel EN590 and Jet A1 on the high sea ready for take over; цены — после получения контактов",
+     "не указано", "", "", "", "https://www.industrialmarinepower.com/en590--petcoke--jeta1-fuel--15766/",
+     "Судно не названо; сначала собирают контакты покупателя.", "", "НЕ ПОДТВЕРЖДЕНО"),
+]
+
+REAL_CHANNELS = [
+    ("Танкерный брокер", "Clarksons", "https://www.clarksons.com", "Видит позиции загруженных MR/LR танкеров и фрахт; может вывести на владельца груза"),
+    ("Танкерный брокер", "SSY (Simpson Spence Young)", "https://www.ssyonline.com", "Чистые танкеры (clean products)"),
+    ("Танкерный брокер", "E.A. Gibson", "https://www.eagibson.co.uk", "Чистые нефтепродукты, Восток Суэца"),
+    ("Танкерный брокер", "Braemar", "https://braemar.com", "Танкеры и брокеридж"),
+    ("Танкерный брокер", "Poten & Partners", "https://www.poten.com", "Танкеры и аналитика"),
+    ("Ценовое агентство", "S&P Global Platts (окно MOC)", "https://www.spglobal.com/commodityinsights", "Видно, кто продаёт карго 10 ppm (FOB Singapore/ARA, CIF NWE) и по какой цене"),
+    ("Ценовое агентство", "Argus Media", "https://www.argusmedia.com", "Тендеры НПЗ на продажу gasoil 10 ppm, сделки на воде"),
+    ("Трекинг танкеров", "Kpler / Vortexa", "https://www.kpler.com ; https://www.vortexa.com", "Какие танкеры с ULSD на воде, кто владелец груза, куда идут (платно)"),
+    ("Проверка судна", "Equasis", "https://www.equasis.org", "Бесплатно: владелец, менеджер, тип судна по IMO"),
+    ("Проверка судна", "VesselFinder / MarineTraffic", "https://www.vesselfinder.com ; https://www.marinetraffic.com", "Позиция по AIS, осадка, тип (Crude vs Oil/Chemical/Products tanker)"),
+    ("Продавец груза на воде", "Vitol, Trafigura, Gunvor, Glencore, Mercuria, TotalEnergies, Shell, BP", "см. лист «Прямые продавцы (A-B)»", "Продают карго в пути — только контрагентам после KYC, с LC/кредитной линией, по формуле Platts ± премия"),
+]
+
+VESSEL_CHECKLIST = [
+    "1. Название судна + IMO → Equasis/VesselFinder: существует ли, тип судна. Дизель перевозят только Oil Products / Oil-Chemical танкеры (MR 30–55 тыс. т, LR1 55–80, LR2 80–120). Crude/Suezmax/VLCC под дизель = фальшивка.",
+    "2. AIS: где судно сейчас, совпадает ли с заявленным маршрутом и ETA; осадка — гружёное или в балласте.",
+    "3. Владелец/менеджер судна (из Equasis) — связаться самим и спросить, есть ли на борту груз и чей он. Q88 и B/L от «продавца» ничего не доказывают.",
+    "4. Владелец груза — назван в B/L (shipper). Запросить подтверждение у него напрямую по его официальному сайту.",
+    "5. Санкции: проверить судно и владельца по спискам OFAC/ЕС/UK; признаки «теневого флота» — отключение AIS, STS у Малайзии/Омана, частая смена флага.",
+    "6. Цена: только формула Platts/Argus ± премия. Дисконт >5–10% к рынку на груз в пути — практически всегда обман.",
+    "7. Никаких платежей до перехода права собственности: ни «title take over fee», ни «re-routing fee», ни «3% security», ни депозитов. Оплата — аккредитив против документов, подтверждённых банком.",
+]
